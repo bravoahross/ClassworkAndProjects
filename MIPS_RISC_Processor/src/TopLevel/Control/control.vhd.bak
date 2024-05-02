@@ -1,0 +1,285 @@
+-------------------------------------------------------------------------
+-- Noah Ross
+-- Department of Electrical and Computer Engineering
+-- Iowa State University
+-------------------------------------------------------------------------
+-- control.vhd
+-------------------------------------------------------------------------
+-- DESCRIPTION: This file contains the control unit and ALU control for project 1
+--
+--
+-- NOTES:
+-- 3/2/23 :: Design created.
+-------------------------------------------------------------------------
+
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY control IS
+	PORT (
+		i_Instruction : IN STD_LOGIC_VECTOR (31 DOWNTO 0);
+		o_RegDst : out std_logic_vector(1 downto 0);
+		o_Jump : out std_logic;
+		o_Branch : out std_logic;
+		o_BranchSel : out std_logic_vector(2 downto 0);
+		o_JR : out std_logic;
+		o_JAL : out std_logic;
+		o_MemRead : out std_logic;
+		o_MemtoReg : OUT STD_LOGIC;
+		o_MemWrite : out std_logic;
+		o_ALUSrc : OUT STD_LOGIC;
+		o_RegWrite : OUT STD_LOGIC;
+		o_RegWriteSel : OUT STD_LOGIC;
+		o_ALUOp : OUT STD_LOGIC_VECTOR (5 DOWNTO 0));
+END control;
+
+ARCHITECTURE arch_control OF control IS
+
+BEGIN
+
+	PROCESS (i_Instruction)
+	BEGIN
+
+		IF i_Instruction(31 DOWNTO 26) = "001000" THEN -- addi
+			o_RegDst <= "10";
+			o_Jump <= '0';
+			o_Branch <= '0';
+			o_BranchSel <= "000";
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '1'; -- Immediate
+			o_RegWrite <= '1';
+			o_ALUOp <= "100000"; -- This is Add in ALU
+
+		ELSIF i_Instruction(31 DOWNTO 26) = "001001" THEN -- addiu
+			o_RegDst <= "10";
+			o_Jump <= '0';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '1';
+			o_RegWrite <= '1';
+			o_ALUOp <= "100001"; -- Add unsigned
+
+		ELSIF i_Instruction(31 DOWNTO 26) = "100100" THEN -- andi
+			o_RegDst <= "10";
+			o_Jump <= '0';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '1';
+			o_RegWrite <= '1';
+			o_ALUOp <= "000000"; -- CHANGE THIS LATER
+
+		ELSIF i_Instruction(31 DOWNTO 26) = "001111" THEN -- lui
+			o_RegDst <= "00";
+			o_Jump <= '0';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '1';
+			o_MemtoReg <= '1';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '1';
+			o_RegWrite <= '1';
+			o_ALUOp <= "000000";
+
+		ELSIF i_Instruction(31 DOWNTO 26) = "100011" THEN -- lw
+			o_RegDst <= "00";
+			o_Jump <= '0';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '1';
+			o_MemtoReg <= '1';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '1';
+			o_RegWrite <= '1';
+			o_ALUOp <= "000000";
+
+		ELSIF i_Instruction(31 DOWNTO 26) = "001010" THEN -- slti
+			o_RegDst <= "00";
+			o_Jump <= '0';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '1';
+			o_RegWrite <= '1';
+			o_ALUOp <= "101010"; -- This is slt in ALU
+
+		ELSIF i_Instruction(31 DOWNTO 26) = "101011" THEN -- sw
+			o_RegDst <= "00";
+			o_Jump <= '0';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '1';
+			o_ALUSrc <= '1';
+			o_RegWrite <= '1';
+			o_ALUOp <= "000000";
+
+		ELSIF i_Instruction(31 DOWNTO 26) = "000100" THEN -- beq
+			o_RegDst <= "00";
+			o_Jump <= '0';
+			o_Branch <= '1';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '1';
+			o_RegWrite <= '1';
+			o_ALUOp <= "000000"; -- Need to check out again
+
+		ELSIF i_Instruction(31 DOWNTO 26) = "000101" THEN -- bne
+			o_RegDst <= "00";
+			o_Jump <= '0';
+			o_Branch <= '1';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '1';
+			o_RegWrite <= '1';
+			o_ALUOp <= "000000"; -- Reevaluate
+
+		ELSIF i_Instruction(31 DOWNTO 26) = "000010" THEN -- j
+			o_RegDst <= "00";
+			o_Jump <= '1';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '1';
+			o_RegWrite <= '1';
+			o_ALUOp <= "000000";
+
+		ELSIF i_Instruction(31 DOWNTO 26) = "000011" THEN -- jal
+			o_RegDst <= "11";
+			o_Jump <= '1';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '1';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '1';
+			o_RegWrite <= '1';
+			o_ALUOp <= "000000";
+
+			-- R type instructions. ALU control cases. If i_Instructions(31-26) = 000000
+
+		ELSIF (i_Instruction(31 DOWNTO 26) = "000000") and (i_Instruction(5 DOWNTO 0) = "100001") THEN -- addu 
+			o_RegDst <= "01";
+			o_Jump <= '0';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '0';
+			o_RegWrite <= '1';
+			o_ALUOp <= "100001";
+
+		ELSIF (i_Instruction(31 DOWNTO 26) = "000000") and (i_Instruction(5 DOWNTO 0) = "100010") THEN -- sub
+			o_RegDst <= "01";
+			o_Jump <= '0';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '0';
+			o_RegWrite <= '1';
+			o_ALUOp <= "100010";
+
+		ELSIF (i_Instruction(31 DOWNTO 26) = "000000") and (i_Instruction(5 DOWNTO 0) = "100011") THEN -- subu
+			o_RegDst <= "01";
+			o_Jump <= '0';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '0';
+			o_RegWrite <= '1';
+			o_ALUOp <= "100011";
+
+		ELSIF (i_Instruction(31 DOWNTO 26) = "000000") and (i_Instruction(5 DOWNTO 0) = "100100") THEN -- and
+			o_RegDst <= "01";
+			o_Jump <= '0';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '0';
+			o_RegWrite <= '1';
+			o_ALUOp <= "100100";
+
+		ELSIF (i_Instruction(31 DOWNTO 26) = "000000") and (i_Instruction(5 DOWNTO 0) = "100101") THEN -- or
+			o_RegDst <= "01";
+			o_Jump <= '0';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '0';
+			o_RegWrite <= '1';
+			o_ALUOp <= i_Instruction(5 DOWNTO 0);
+
+		ELSIF (i_Instruction(31 DOWNTO 26) = "000000") and (i_Instruction(5 DOWNTO 0) = "100110") THEN -- xor
+			o_RegDst <= "01";
+			o_Jump <= '0';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '0';
+			o_RegWrite <= '1';
+			o_ALUOp <= i_Instruction(5 DOWNTO 0);
+
+		ELSIF (i_Instruction(31 DOWNTO 26) = "000000") and (i_Instruction(5 DOWNTO 0) = "100111") THEN -- nor
+			o_RegDst <= "01";
+			o_Jump <= '0';
+			o_Branch <= '0';
+			o_JR <= '0';
+			o_JAL <= '0';
+			o_MemRead <= '0';
+			o_MemtoReg <= '0';
+			o_MemWrite <= '0';
+			o_ALUSrc <= '0';
+			o_RegWrite <= '1';
+			o_ALUOp <= i_Instruction(5 DOWNTO 0);
+
+		-- else for unrecognized code? 
+
+		END IF;
+
+	END PROCESS;
+END arch_control;
