@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Petrol Pal</string>
+
+    <string-array name="users">
+        <item>User</item>
+        <item>Gas Station Owner</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.as1">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.PetrolPal"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".PasswordReset"
+            android:exported="false" />
+
+        <activity
+            android:name=".PriceReportStation"
+            android:exported="false" />
+        <activity
+            android:name=".PriceReportUser"
+            android:exported="false" />
+        <activity
+            android:name=".DodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MapActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GasMain"
+            android:exported="false" />
+        <activity
+            android:name=".SignupPage"
+            android:exported="true" />
+        <activity
+            android:name=".LoginPage"
+            android:exported="true" />
+        <activity
+            android:name=".ReviewPage"
+            android:exported="true" />
+        <activity
+            android:name=".AdminPage"
+            android:exported="true" />
+        <activity
+            android:name=".ReviewList"
+            android:exported="true" />
+        <activity
+            android:name=".UserMain"
+            android:exported="true" />
+        <activity
+            android:name=".GasMainForm"
+            android:exported="true" />
+        <activity
+            android:name=".GasChatPage"
+            android:exported="true" />
+        <activity
+            android:name=".NewChat"
+            android:exported="true" />
+        <activity
+            android:name=".StartupScreen"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".FullStationViewUser"
+            android:exported="true" />
+        <activity
+            android:name=".FavList"
+            android:exported="true" />
+    </application>
+
+</manifest>
